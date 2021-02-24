@@ -5,22 +5,25 @@ import { useRoutes } from './routes'
 import Paper from '@material-ui/core/Paper'
 import bg from './images/bg-1200.png'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-
     '& > *': {
       margin: '20px auto',
       minHeight: 'calc(100vh - 40px)',
-      maxWidth: '1200px',
+      maxWidth: '1280px',
       width: '100%',
       padding: '20px',
       backgroundImage: `url(${bg})`,
       backgroundPosition: 'center center',
       backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover'
-    }
+      backgroundSize: 'cover',
+      [theme.breakpoints.down('md')]: {
+        minHeight: '100vh',
+        margin: 0,
+      },
+    },
   }
 }))
 

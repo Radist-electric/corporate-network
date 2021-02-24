@@ -1,8 +1,29 @@
+import { makeStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper'
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    height: '100%',
+    '& > *': {
+      height: 'calc(100% - 90px)',
+      width: '100%',
+      padding: '20px',
+      marginTop: '20px'
+    },
+  },
+}))
+
 export const ProfilePage = () => {
+  const classes = useStyles()
+
   return (
-    <div>
-      <h1>Личный кабинет</h1>
-      <p>В процессе</p>
+    <div className={classes.root}>
+      <Paper elevation={3}>
+        <h1>Личный кабинет</h1>
+        <p>В процессе</p>
+      </Paper>
     </div>
   )
 }
