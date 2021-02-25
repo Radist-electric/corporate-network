@@ -11,7 +11,8 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
     '& > *': {
       margin: '20px auto',
-      minHeight: 'calc(100vh - 40px)',
+      height: '100vh',
+      maxHeight: 'calc(100vh - 40px)',
       maxWidth: '1280px',
       width: '100%',
       padding: '20px',

@@ -7,14 +7,16 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     height: '100%',
+    maxHeight: 'calc(100% - 50px)',
     '& > *': {
-      height: 'calc(100% - 90px)',
+      height: 'calc(100% - 40px)',
       padding: '20px',
       marginTop: '20px'
     },
   },
   chats: {
     width: '30%',
+    overflowY: 'auto',
     [theme.breakpoints.down('md')]: {
       width: '40%'
     },
