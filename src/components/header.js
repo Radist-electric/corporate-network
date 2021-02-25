@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     marginLeft: 'auto',
     [theme.breakpoints.down('sm')]: {
+      zIndex: 1,
       position: 'absolute',
       top: '50px',
       right: 0,
