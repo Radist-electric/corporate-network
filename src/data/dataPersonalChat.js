@@ -1,40 +1,40 @@
 export const dataPersonalChat = [
   {
-    personId: 1,
+    chatId: 1,
     dialog: [
       {
-        me: true,
+        id: 7,
         data: new Date(2021, 1, 24, 12, 15, 25),
         text: 'Привет! Как дела?'
       },
       {
-        me: false,
+        id: 1,
         data: new Date(2021, 1, 24, 12, 15, 38),
         text: 'Отлично! Сам как?'
       },
       {
-        me: true,
+        id: 7,
         data: new Date(2021, 1, 24, 12, 15, 57),
         text: 'На обед пошёл. В столовке стою в очереди.'
       },
       {
-        me: false,
+        id: 1,
         data: new Date(2021, 1, 24, 12, 16, 30),
         text: 'Жди. Скоро тоже подойду.'
       }
     ]
   },
   {
-    personId: 3,
+    chatId: 3,
     dialog: [
       {
-        me: false,
+        id: 3,
         data: new Date(2021, 1, 25, 8, 15, 25),
         text: 'Доброе утро. Зайди ко мне в кабинет, когда на работу приедешь.'
       },
       {
-        me: true,
-        data: new Date(2021, 1, 28, 12, 15, 38),
+        id: 7,
+        data: new Date(2021, 1, 28, 8, 15, 38),
         text: 'Здравствуйте. Хорошо.'
       }
     ]
