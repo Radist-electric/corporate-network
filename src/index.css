@@ -7,3 +7,12 @@
 body {
   font-family: 'Roboto', sans-serif;
 }
+
+.scroll-bar {
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+}
+
+.scroll-bar::-webkit-scrollbar {
+  width: 0;
+}

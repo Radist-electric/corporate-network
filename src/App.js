@@ -34,6 +34,8 @@ const App = () => {
   const classes = useStyles()
   const isAuth = true
   const routes = useRoutes(isAuth)
+  let myDate = new Date(2021, 1, 24, 12, 15, 25)
+  console.log(myDate)
 
   return (
     <Router>

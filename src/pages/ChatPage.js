@@ -1,11 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
-import Chat from '../components/chat'
+import {ChatList} from '../components/chatList'
+import {Chat} from '../components/chat'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
     height: '100%',
     maxHeight: 'calc(100% - 50px)',
     '& > *': {
@@ -25,9 +27,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   chat: {
-    width: '70%',
+    width: 'calc(70% - 10px)',
     [theme.breakpoints.down('md')]: {
-      width: '60%'
+      width: 'calc(60% - 10px)'
     },
     [theme.breakpoints.down('sm')]: {
       width: '100%',
@@ -42,10 +44,12 @@ export const ChatPage = () => {
 
   return (
     <div className={classes.root}>
-      <Paper elevation={0} className={classes.chats} square>
-        <Chat/>
+      <Paper elevation={5} className={[classes.chats, 'scroll-bar'].join(' ')}>
+        <ChatList/>
       </Paper>
-      <Paper elevation={5} className={classes.chat} />
+      <Paper elevation={5} className={classes.chat}>
+        <Chat chatData={[true, 1]}/>
+      </Paper>
     </div>
   )
 }
