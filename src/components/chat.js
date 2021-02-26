@@ -6,7 +6,7 @@ import { dataPersonalChat } from '../data/dataPersonalChat'
 import { dataGroupChat } from '../data/dataGroupChat'
 import Avatar from '@material-ui/core/Avatar'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   header: {
     padding: '10px',
     display: 'flex',
@@ -30,6 +30,28 @@ const useStyles = makeStyles((theme) => ({
   chat: {
     overflowY: 'auto'
   },
+  textWrap: {
+    width: '80%',
+    padding: '5px',
+    marginBottom: '5px',
+    borderRadius: '5px',
+    backgroundColor: 'rgba(0,0,0,0.1)'
+  },
+  textWrapRight: {
+    marginLeft: 'auto',
+    backgroundColor: 'rgba(255,255,51,0.7)'
+  },
+  text: {
+    margin: 0,
+    fontSize: '14px'
+  },
+  date: {
+    fontSize: '10px'
+  },
+  person: {
+    color: '#FF0000',
+    fontSize: '12px'
+  }
 }))
 
 export const Chat = (props) => {
@@ -37,11 +59,8 @@ export const Chat = (props) => {
   const [chatType, setChatType] = useState(props.chatData[0])
   const [chatId, setChatId] = useState(props.chatData[1])
   const [dataChat, setDataChat] = useState(props.chatData[0] == true ? dataPersonalChat : dataGroupChat)
+  const currentUser = 7
   const classes = useStyles()
-
-  console.log('chatType', chatType)
-  console.log('chatId', chatId)
-  console.log('dataChat', dataChat)
 
   const header = chatType ?
     dataUsers.filter((item) => {
@@ -72,12 +91,28 @@ export const Chat = (props) => {
       )
     })
 
+  const chat = dataChat.filter((item) => {
+    return item.chatId == chatId
+  })[0].dialog.map((item, i) => {
+    const name = dataUsers.filter((person)=> {
+      return person.id == item.id
+    })[0]
+    return (
+      <div className={[classes.textWrap, item.id == currentUser ? classes.textWrapRight : ''].join(' ')} key={i}>
+        {!chatType && <p className={[classes.text, classes.person].join(' ')}>{name.firstName} {name.lastName}</p>}
+        <p className={classes.text}>{item.text}</p>
+        <span className={classes.date}>{item.date.toLocaleDateString()} {item.date.toLocaleTimeString()}</span>
+      </div>
+    )
+  })
+
+
   return (
     <>
       {header}
       <hr />
       <div className={classes.chat}>
-
+        {chat}
       </div>
     </>
   )
