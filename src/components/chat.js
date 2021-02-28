@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { dataUsers } from '../data/dataUsers'
 import { dataChats } from '../data/dataChats'
@@ -56,11 +56,18 @@ const useStyles = makeStyles(() => ({
 
 export const Chat = (props) => {
   // chatType (true - личный, false - групповой)
-  const [chatType, setChatType] = useState(props.chatData[0])
-  const [chatId, setChatId] = useState(props.chatData[1])
-  const [dataChat, setDataChat] = useState(props.chatData[0] == true ? dataPersonalChat : dataGroupChat)
+  const [chatType, setChatType] = useState(props.chatType)
+  const [chatId, setChatId] = useState(props.chatId)
+  const [dataChat, setDataChat] = useState(props.chatType == true ? dataPersonalChat : dataGroupChat)
   const currentUser = 7
   const classes = useStyles()
+
+  useEffect(() => {
+    console.log('useEffect Chat')
+    setChatType(props.chatType)
+    setChatId(props.chatId)
+    setDataChat(props.chatType == true ? dataPersonalChat : dataGroupChat)
+  })
 
   const header = chatType ?
     dataUsers.filter((item) => {
@@ -91,20 +98,24 @@ export const Chat = (props) => {
       )
     })
 
-  const chat = dataChat.filter((item) => {
+  const getChat = dataChat.filter((item) => {
     return item.chatId == chatId
-  })[0].dialog.map((item, i) => {
-    const name = dataUsers.filter((person)=> {
-      return person.id == item.id
-    })[0]
-    return (
-      <div className={[classes.textWrap, item.id == currentUser ? classes.textWrapRight : ''].join(' ')} key={i}>
-        {!chatType && <p className={[classes.text, classes.person].join(' ')}>{name.firstName} {name.lastName}</p>}
-        <p className={classes.text}>{item.text}</p>
-        <span className={classes.date}>{item.date.toLocaleDateString()} {item.date.toLocaleTimeString()}</span>
-      </div>
-    )
-  })
+  })[0]
+  const chat = getChat ?
+    getChat.dialog.map((item, i) => {
+      const name = dataUsers.filter((person) => {
+        return person.id == item.id
+      })[0]
+      return (
+        <div className={[classes.textWrap, item.id == currentUser ? classes.textWrapRight : ''].join(' ')} key={i}>
+          {!chatType && <p className={[classes.text, classes.person].join(' ')}>{name.firstName} {name.lastName}</p>}
+          <p className={classes.text}>{item.text}</p>
+          <span className={classes.date}>{item.date.toLocaleDateString()} {item.date.toLocaleTimeString()}</span>
+        </div>
+      )
+    })
+    :
+    <p className={classes.text}>Сообщений нет</p>
 
 
   return (

@@ -42,8 +42,8 @@ export const dataUsers =  [
     id: 6
   },
   {
-    firstName: 'Алексей',
-    lastName: 'Раимов',
+    firstName: 'Иван',
+    lastName: 'Иванов',
     profession: 'Веб разработчик',
     id: 7
   },

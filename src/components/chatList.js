@@ -117,7 +117,7 @@ const AccordionSummary = withStyles({
   expanded: {},
 })(MuiAccordionSummary)
 
-export const ChatList = () => {
+export const ChatList = (props) => {
   const [expanded, setExpanded] = useState(false)
   const [users, setUsers] = useState(dataUsers)
   const [chats, setChats] = useState(dataChats)
@@ -126,12 +126,6 @@ export const ChatList = () => {
 
   const handleClick = (panel) => {
     setExpanded(expanded == panel ? false : panel)
-  }
-
-  // Перейти к диалогу
-  const goToDialog = (chatType, id) => {
-    console.log('chatType', chatType)
-    console.log('id', id)
   }
 
   // Список чатов пользователя
@@ -150,7 +144,7 @@ export const ChatList = () => {
       if (person.id == currentUser) return
       // Остальных участников выводим в перечень
       return (
-        <div className={classes.person} key={i} onClick={() => { goToDialog(true, person.id) }}>
+        <div className={classes.person} key={i} onClick={() => { props.goToDialog(true, person.id) }}>
           <Avatar className={classes.small}>{person.firstName[0].toUpperCase()}{person.lastName[0].toUpperCase()}</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{person.firstName} {person.lastName}</p>
@@ -164,7 +158,7 @@ export const ChatList = () => {
         <AccordionSummary aria-controls={`panel${i + 1}d-content`} id={`panel${i + 1}d-header`}>
           <Avatar className={classes.chat} onClick={() => { handleClick(`panel${i + 1}`) }}>Чат</Avatar>
           <Typography className={classes.description}>{item.name}</Typography>
-          <ArrowForwardIcon className={classes.forward} onClick={() => { goToDialog(false, item.id) }} />
+          <ArrowForwardIcon className={classes.forward} onClick={() => { props.goToDialog(false, item.id) }} />
         </AccordionSummary>
         <div className={classes.persons}>
           {persons}
@@ -177,7 +171,7 @@ export const ChatList = () => {
   const people = users.map((person, i) => {
     if (person.id == currentUser) return
     return (
-      <div className={classes.person} key={i} onClick={() => { goToDialog(true, person.id) }}>
+      <div className={classes.person} key={i} onClick={() => { props.goToDialog(true, person.id) }}>
         <Avatar>{person.firstName[0].toUpperCase()}{person.lastName[0].toUpperCase()}</Avatar>
         <div className={classes.description}>
           <p className={classes.curname}>{person.firstName} {person.lastName}</p>

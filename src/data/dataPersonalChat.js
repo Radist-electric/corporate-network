@@ -34,7 +34,7 @@ export const dataPersonalChat = [
       },
       {
         id: 7,
-        date: new Date(2021, 1, 28, 8, 15, 38),
+        date: new Date(2021, 1, 25, 8, 16, 30),
         text: 'Здравствуйте. Хорошо.'
       }
     ]

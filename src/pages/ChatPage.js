@@ -1,7 +1,8 @@
+import {useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
-import {ChatList} from '../components/chatList'
-import {Chat} from '../components/chat'
+import { ChatList } from '../components/chatList'
+import { Chat } from '../components/chat'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,16 +40,24 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const ChatPage = () => {
+  const [chatType, setChatType] = useState(false)
+  const [chatId, setChatId] = useState(0)
   const classes = useStyles()
+
+  // Перейти к диалогу
+  const goToDialog = (type, id) => {
+    setChatType(type)
+    setChatId(id)
+  }
 
 
   return (
     <div className={classes.root}>
       <Paper elevation={5} className={[classes.chats, 'scroll-bar'].join(' ')}>
-        <ChatList/>
+        <ChatList goToDialog={goToDialog} />
       </Paper>
       <Paper elevation={5} className={classes.chat}>
-        <Chat chatData={[true, 1]}/>
+        <Chat chatType={chatType} chatId={chatId}/>
       </Paper>
     </div>
   )
