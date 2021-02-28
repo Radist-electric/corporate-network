@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import Avatar from '@material-ui/core/Avatar'
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace'
 import { dataUsers } from '../data/dataUsers'
 import { dataChats } from '../data/dataChats'
 import { dataPersonalChat } from '../data/dataPersonalChat'
 import { dataGroupChat } from '../data/dataGroupChat'
-import Avatar from '@material-ui/core/Avatar'
+
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -28,7 +30,8 @@ const useStyles = makeStyles(() => ({
     color: 'rgba(0,0,0,0.5)'
   },
   chat: {
-    overflowY: 'auto'
+    overflowY: 'auto',
+    maxHeight: 'calc(100% - 80px)',
   },
   textWrap: {
     width: '80%',
@@ -51,7 +54,27 @@ const useStyles = makeStyles(() => ({
   person: {
     color: '#FF0000',
     fontSize: '12px'
-  }
+  },
+  empty: {
+    height: '0',
+    width: '100%'
+  },
+  back: {
+    height: '40px',
+    width: '40px',
+    marginRight: '20px',
+    fontSize: '24px',
+    backgroundColor: 'rgba(0, 0, 0, .3)',
+    borderRadius: '50%',
+    cursor: 'pointer',
+    color: '#FFFF33',
+    transition: 'all 300ms',
+    '&:hover': {
+      marginLeft: '-5px',
+      marginRight: '25px',
+      backgroundColor: 'rgba(0, 0, 0, .5)',
+    }
+  },
 }))
 
 export const Chat = (props) => {
@@ -60,6 +83,7 @@ export const Chat = (props) => {
   const [chatId, setChatId] = useState(props.chatId)
   const [dataChat, setDataChat] = useState(props.chatType == true ? dataPersonalChat : dataGroupChat)
   const currentUser = 7
+  const empty = useRef(null)
   const classes = useStyles()
 
   useEffect(() => {
@@ -67,6 +91,7 @@ export const Chat = (props) => {
     setChatType(props.chatType)
     setChatId(props.chatId)
     setDataChat(props.chatType == true ? dataPersonalChat : dataGroupChat)
+    empty.current.scrollIntoView()
   })
 
   const header = chatType ?
@@ -75,6 +100,7 @@ export const Chat = (props) => {
     }).map((person, i) => {
       return (
         <div className={classes.header} key={i}>
+          {!props.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={props.goToChatList}/>}
           <Avatar>{person.firstName[0].toUpperCase()}{person.lastName[0].toUpperCase()}</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{person.firstName} {person.lastName}</p>
@@ -89,6 +115,7 @@ export const Chat = (props) => {
     }).map((chat, i) => {
       return (
         <div className={classes.header} key={i}>
+          {!props.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={props.goToChatList}/>}
           <Avatar>Чат</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{chat.name}</p>
@@ -122,8 +149,10 @@ export const Chat = (props) => {
     <>
       {header}
       <hr />
-      <div className={classes.chat}>
+      <div className={[classes.chat, 'scroll-bar'].join(' ')}>
         {chat}
+        <div className={classes.empty} ref={empty}>
+        </div>
       </div>
     </>
   )
