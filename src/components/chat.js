@@ -6,6 +6,7 @@ import { dataUsers } from '../data/dataUsers'
 import { dataChats } from '../data/dataChats'
 import { dataPersonalChat } from '../data/dataPersonalChat'
 import { dataGroupChat } from '../data/dataGroupChat'
+import PostAddForm from './postAddForm'
 
 
 const useStyles = makeStyles(() => ({
@@ -31,7 +32,8 @@ const useStyles = makeStyles(() => ({
   },
   chat: {
     overflowY: 'auto',
-    maxHeight: 'calc(100% - 80px)',
+    maxHeight: 'calc(100% - 135px)',
+    minHeight: 'calc(100% - 135px)',
   },
   textWrap: {
     width: '80%',
@@ -94,13 +96,36 @@ export const Chat = (props) => {
     empty.current.scrollIntoView()
   })
 
+  const addPost = (post) => {
+    const newPost = {
+      id: currentUser,
+      date: new Date(),
+      text: post
+    }
+    const index = dataChat.findIndex(elem => elem.chatId === chatId)
+    if (index == -1) {
+      const newDialog = {
+        chatId: chatId,
+        dialog: [newPost]
+      }
+      const newChat = [...dataChat, newDialog]
+      setDataChat(newChat)
+    } else {
+      const currentDialog = dataChat[index]
+      currentDialog.dialog.push(newPost)
+      const newChat = [...dataChat.slice(0, index), currentDialog, ...dataChat.slice(index + 1)]
+      setDataChat(newChat)
+    }
+    
+  }
+
   const header = chatType ?
     dataUsers.filter((item) => {
       return item.id == chatId
     }).map((person, i) => {
       return (
         <div className={classes.header} key={i}>
-          {!props.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={props.goToChatList}/>}
+          {!props.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={props.goToChatList} />}
           <Avatar>{person.firstName[0].toUpperCase()}{person.lastName[0].toUpperCase()}</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{person.firstName} {person.lastName}</p>
@@ -115,7 +140,7 @@ export const Chat = (props) => {
     }).map((chat, i) => {
       return (
         <div className={classes.header} key={i}>
-          {!props.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={props.goToChatList}/>}
+          {!props.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={props.goToChatList} />}
           <Avatar>Чат</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{chat.name}</p>
@@ -151,9 +176,9 @@ export const Chat = (props) => {
       <hr />
       <div className={[classes.chat, 'scroll-bar'].join(' ')}>
         {chat}
-        <div className={classes.empty} ref={empty}>
-        </div>
+        <div className={classes.empty} ref={empty}></div>
       </div>
+      <PostAddForm addPost={addPost} />
     </>
   )
 }

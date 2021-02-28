@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
 export const ChatPage = () => {
   const [chatType, setChatType] = useState(false)
   const [chatId, setChatId] = useState(0)
-  // const [showChatList, setShowChatList] = useState(true)
   const [showChat, setShowChat] = useState(wideScreen)
   const classes = useStyles()
 
