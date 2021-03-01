@@ -1,10 +1,9 @@
-import { useState } from 'react'
+import { useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import { ChatList } from '../components/chatList'
 import { Chat } from '../components/chat'
-
-const wideScreen = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) >= 960
+import { AppContext } from '../context/AppContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,7 +15,10 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       height: 'calc(100% - 40px)',
       padding: '20px',
-      marginTop: '20px'
+      marginTop: '20px',
+      [theme.breakpoints.down('sm')]: {
+        height: 'calc(100% - 10px)',
+      },
     },
   },
   chats: {
@@ -44,35 +46,16 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const ChatPage = () => {
-  const [chatType, setChatType] = useState(false)
-  const [chatId, setChatId] = useState(0)
-  const [showChat, setShowChat] = useState(wideScreen)
+  const { wideScreen, showChat } = useContext(AppContext)
   const classes = useStyles()
-
-  // Перейти к диалогу
-  const goToDialog = (type, id) => {
-    setChatType(type)
-    setChatId(id)
-    if (!wideScreen) { setShowChat(true) }
-  }
-
-  // Вернуться к списку чатов
-  const goToChatList = () => {
-    if (!wideScreen) { setShowChat(false) }
-  }
 
   return (
     <div className={classes.root}>
       {(wideScreen || !showChat) && <Paper elevation={5} className={[classes.chats, 'scroll-bar'].join(' ')}>
-        <ChatList
-          goToDialog={goToDialog} />
+        <ChatList />
       </Paper>}
       {showChat && <Paper elevation={5} className={classes.chat}>
-        <Chat
-          chatType={chatType}
-          chatId={chatId}
-          wideScreen={wideScreen}
-          goToChatList={goToChatList} />
+        <Chat />
       </Paper>}
     </div>
   )

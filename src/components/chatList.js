@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { withStyles, makeStyles } from '@material-ui/core/styles'
 import MuiAccordion from '@material-ui/core/Accordion'
 import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
@@ -7,6 +7,7 @@ import Avatar from '@material-ui/core/Avatar'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
 import { dataUsers } from '../data/dataUsers'
 import { dataChats } from '../data/dataChats'
+import { AppContext } from '../context/AppContext'
 
 const useStyles = makeStyles((theme) => ({
   persons: {
@@ -118,6 +119,7 @@ const AccordionSummary = withStyles({
 })(MuiAccordionSummary)
 
 export const ChatList = (props) => {
+  const { dialogHandler } = useContext(AppContext)
   const [expanded, setExpanded] = useState(false)
   const [users, setUsers] = useState(dataUsers)
   const [chats, setChats] = useState(dataChats)
@@ -144,7 +146,7 @@ export const ChatList = (props) => {
       if (person.id == currentUser) return
       // Остальных участников выводим в перечень
       return (
-        <div className={classes.person} key={i} onClick={() => { props.goToDialog(true, person.id) }}>
+        <div className={classes.person} key={i} onClick={() => { dialogHandler(true, person.id) }}>
           <Avatar className={classes.small}>{person.firstName[0].toUpperCase()}{person.lastName[0].toUpperCase()}</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{person.firstName} {person.lastName}</p>
@@ -158,7 +160,7 @@ export const ChatList = (props) => {
         <AccordionSummary aria-controls={`panel${i + 1}d-content`} id={`panel${i + 1}d-header`}>
           <Avatar className={classes.chat} onClick={() => { handleClick(`panel${i + 1}`) }}>Чат</Avatar>
           <Typography className={classes.description}>{item.name}</Typography>
-          <ArrowForwardIcon className={classes.forward} onClick={() => { props.goToDialog(false, item.id) }} />
+          <ArrowForwardIcon className={classes.forward} onClick={() => { dialogHandler(false, item.id) }} />
         </AccordionSummary>
         <div className={classes.persons}>
           {persons}
@@ -171,7 +173,7 @@ export const ChatList = (props) => {
   const people = users.map((person, i) => {
     if (person.id == currentUser) return
     return (
-      <div className={classes.person} key={i} onClick={() => { props.goToDialog(true, person.id) }}>
+      <div className={classes.person} key={i} onClick={() => { dialogHandler(true, person.id) }}>
         <Avatar>{person.firstName[0].toUpperCase()}{person.lastName[0].toUpperCase()}</Avatar>
         <div className={classes.description}>
           <p className={classes.curname}>{person.firstName} {person.lastName}</p>

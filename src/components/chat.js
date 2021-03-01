@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Avatar from '@material-ui/core/Avatar'
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace'
@@ -7,6 +7,7 @@ import { dataChats } from '../data/dataChats'
 import { dataPersonalChat } from '../data/dataPersonalChat'
 import { dataGroupChat } from '../data/dataGroupChat'
 import PostAddForm from './postAddForm'
+import { AppContext } from '../context/AppContext'
 
 
 const useStyles = makeStyles(() => ({
@@ -80,21 +81,28 @@ const useStyles = makeStyles(() => ({
 }))
 
 export const Chat = (props) => {
+  const data = useContext(AppContext)
   // chatType (true - личный, false - групповой)
-  const [chatType, setChatType] = useState(props.chatType)
-  const [chatId, setChatId] = useState(props.chatId)
-  const [dataChat, setDataChat] = useState(props.chatType == true ? dataPersonalChat : dataGroupChat)
+  const [chatType, setChatType] = useState(data.chatType)
+  const [chatId, setChatId] = useState(data.chatId)
+  const [chatPersonal, setChatPersonal] = useState(dataPersonalChat)
+  const [chatGroup, setChatGroup] = useState(dataGroupChat)
   const currentUser = 7
   const empty = useRef(null)
   const classes = useStyles()
 
   useEffect(() => {
-    console.log('useEffect Chat')
-    setChatType(props.chatType)
-    setChatId(props.chatId)
-    setDataChat(props.chatType == true ? dataPersonalChat : dataGroupChat)
+    console.log('---useEffect Chat before Update')
+    setChatType(data.chatType)
+    setChatId(data.chatId)
+  }, [data])
+
+  useEffect(() => {
+    console.log('---useEffect Chat after Update')
     empty.current.scrollIntoView()
   })
+
+
 
   const addPost = (post) => {
     const newPost = {
@@ -102,21 +110,27 @@ export const Chat = (props) => {
       date: new Date(),
       text: post
     }
-    const index = dataChat.findIndex(elem => elem.chatId === chatId)
+    console.log('Add post')
+    let newChat
+    const currentChat = chatType ? chatPersonal : chatGroup
+    const index = currentChat.findIndex(elem => elem.chatId === chatId)
     if (index == -1) {
       const newDialog = {
         chatId: chatId,
         dialog: [newPost]
       }
-      const newChat = [...dataChat, newDialog]
-      setDataChat(newChat)
+      newChat = [...currentChat, newDialog]
     } else {
-      const currentDialog = dataChat[index]
+      const currentDialog = currentChat[index]
       currentDialog.dialog.push(newPost)
-      const newChat = [...dataChat.slice(0, index), currentDialog, ...dataChat.slice(index + 1)]
-      setDataChat(newChat)
+      newChat = [...currentChat.slice(0, index), currentDialog, ...currentChat.slice(index + 1)]
     }
-    
+
+    if (chatType) {
+      setChatPersonal(newChat)
+    } else {
+      setChatGroup(newChat)
+    }
   }
 
   const header = chatType ?
@@ -125,7 +139,7 @@ export const Chat = (props) => {
     }).map((person, i) => {
       return (
         <div className={classes.header} key={i}>
-          {!props.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={props.goToChatList} />}
+          {!data.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={data.chatHandler} />}
           <Avatar>{person.firstName[0].toUpperCase()}{person.lastName[0].toUpperCase()}</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{person.firstName} {person.lastName}</p>
@@ -140,7 +154,7 @@ export const Chat = (props) => {
     }).map((chat, i) => {
       return (
         <div className={classes.header} key={i}>
-          {!props.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={props.goToChatList} />}
+          {!data.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={data.chatHandler} />}
           <Avatar>Чат</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{chat.name}</p>
@@ -150,11 +164,12 @@ export const Chat = (props) => {
       )
     })
 
-  const getChat = dataChat.filter((item) => {
+  const getChat = chatType ? chatPersonal : chatGroup
+  const showChat = getChat.filter((item) => {
     return item.chatId == chatId
   })[0]
-  const chat = getChat ?
-    getChat.dialog.map((item, i) => {
+  const chat = showChat ?
+    showChat.dialog.map((item, i) => {
       const name = dataUsers.filter((person) => {
         return person.id == item.id
       })[0]

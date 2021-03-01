@@ -65,7 +65,6 @@ export default function PostAddForm(props) {
           onChange={handleChange}
           variant="outlined"
           fullWidth={true}
-          autoFocus={true}
           className={classes.field}
           InputProps={{
             endAdornment: (
