@@ -118,12 +118,11 @@ const AccordionSummary = withStyles({
   expanded: {},
 })(MuiAccordionSummary)
 
-export const ChatList = (props) => {
-  const { dialogHandler } = useContext(AppContext)
+export const ChatList = () => {
+  const { dialogHandler, currentUser } = useContext(AppContext)
   const [expanded, setExpanded] = useState(false)
   const [users, setUsers] = useState(dataUsers)
   const [chats, setChats] = useState(dataChats)
-  const currentUser = 7
   const classes = useStyles()
 
   const handleClick = (panel) => {

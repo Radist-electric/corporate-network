@@ -80,25 +80,13 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export const Chat = (props) => {
-  const data = useContext(AppContext)
-  // chatType (true - личный, false - групповой)
-  const [chatType, setChatType] = useState(data.chatType)
-  const [chatId, setChatId] = useState(data.chatId)
-  const [chatPersonal, setChatPersonal] = useState(dataPersonalChat)
-  const [chatGroup, setChatGroup] = useState(dataGroupChat)
-  const currentUser = 7
+export const Chat = () => {
+  const {chatType, chatId, wideScreen, chatHandler, currentUser, chatPersonal, chatGroup, changeChatPersonal, changeChatGroup} = useContext(AppContext)
   const empty = useRef(null)
   const classes = useStyles()
 
   useEffect(() => {
-    console.log('---useEffect Chat before Update')
-    setChatType(data.chatType)
-    setChatId(data.chatId)
-  }, [data])
-
-  useEffect(() => {
-    console.log('---useEffect Chat after Update')
+  // Скролл чата вниз до последнего сообщения
     empty.current.scrollIntoView()
   })
 
@@ -127,9 +115,9 @@ export const Chat = (props) => {
     }
 
     if (chatType) {
-      setChatPersonal(newChat)
+      changeChatPersonal(newChat)
     } else {
-      setChatGroup(newChat)
+      changeChatGroup(newChat)
     }
   }
 
@@ -139,7 +127,7 @@ export const Chat = (props) => {
     }).map((person, i) => {
       return (
         <div className={classes.header} key={i}>
-          {!data.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={data.chatHandler} />}
+          {!wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={chatHandler} />}
           <Avatar>{person.firstName[0].toUpperCase()}{person.lastName[0].toUpperCase()}</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{person.firstName} {person.lastName}</p>
@@ -154,7 +142,7 @@ export const Chat = (props) => {
     }).map((chat, i) => {
       return (
         <div className={classes.header} key={i}>
-          {!data.wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={data.chatHandler} />}
+          {!wideScreen && <KeyboardBackspaceIcon className={classes.back} onClick={chatHandler} />}
           <Avatar>Чат</Avatar>
           <div className={classes.description}>
             <p className={classes.name}>{chat.name}</p>

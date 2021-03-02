@@ -9,5 +9,10 @@ export const AppContext = createContext({
   dialogHandler: noop,
   chatHandler: noop,
   wideScreen: null,
-  showChat: false
+  showChat: false,
+  currentUser: null,
+  chatPersonal: [],
+  chatGroup: [],
+  changeChatPersonal: noop,
+  changeChatGroup: noop
 })

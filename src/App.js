@@ -6,6 +6,8 @@ import { useRoutes } from './routes'
 import { AppContext } from './context/AppContext'
 import Paper from '@material-ui/core/Paper'
 import bg from './images/bg-1200.png'
+import { dataPersonalChat } from './data/dataPersonalChat'
+import { dataGroupChat } from './data/dataGroupChat'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,23 +37,36 @@ const useStyles = makeStyles((theme) => ({
 const wideScreen = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) >= 960
 
 const App = () => {
-  const classes = useStyles()
   const isAuth = true
-  const [chatType, setChatType] = useState(false)
+  const classes = useStyles()
+  const routes = useRoutes(isAuth)
+  const currentUser = 7
+  const [chatType, setChatType] = useState(false) // chatType (true - личный, false - групповой)
   const [chatId, setChatId] = useState(0)
   const [showChat, setShowChat] = useState(wideScreen)
+  const [chatPersonal, setChatPersonal] = useState(dataPersonalChat)
+  const [chatGroup, setChatGroup] = useState(dataGroupChat)
+
   const dialogHandler = (type, id) => {
     setChatType(type)
     setChatId(id)
     if (!wideScreen) { setShowChat(true) }
   }
+
   const chatHandler = () => {
     if (!wideScreen) { setShowChat(false) }
   }
-  const routes = useRoutes(isAuth)
 
+  const changeChatPersonal = (newChat) => {
+    setChatPersonal(newChat)
+  }
+
+  const changeChatGroup = (newChat) => {
+    setChatGroup(newChat)
+  }
+  
   return (
-    <AppContext.Provider value={{ isAuth, chatType, chatId, dialogHandler, chatHandler, wideScreen, showChat }}>
+    <AppContext.Provider value={{ isAuth, chatType, chatId, dialogHandler, chatHandler, wideScreen, showChat, currentUser, chatPersonal, chatGroup, changeChatPersonal, changeChatGroup }}>
       <Router>
         <div className={classes.root}>
           <Paper elevation={3}>
