@@ -6,11 +6,15 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexWrap: 'wrap',
     height: '100%',
+    maxHeight: 'calc(100% - 50px)',
     '& > *': {
-      height: 'calc(100% - 90px)',
+      height: 'calc(100% - 40px)',
       width: '100%',
       padding: '20px',
-      marginTop: '20px'
+      marginTop: '20px',
+      [theme.breakpoints.down('sm')]: {
+        height: 'calc(100% - 10px)',
+      },
     },
   },
 }))

@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef, useContext } from 'react'
+import { useEffect, useRef, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Avatar from '@material-ui/core/Avatar'
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace'
 import { dataUsers } from '../data/dataUsers'
 import { dataChats } from '../data/dataChats'
-import { dataPersonalChat } from '../data/dataPersonalChat'
-import { dataGroupChat } from '../data/dataGroupChat'
 import PostAddForm from './postAddForm'
+import PostMenu from './postMenu'
 import { AppContext } from '../context/AppContext'
 
 
@@ -37,8 +36,9 @@ const useStyles = makeStyles(() => ({
     minHeight: 'calc(100% - 135px)',
   },
   textWrap: {
+    position: 'relative',
     width: '80%',
-    padding: '5px',
+    padding: '5px 20px 5px 5px',
     marginBottom: '5px',
     borderRadius: '5px',
     backgroundColor: 'rgba(0,0,0,0.1)'
@@ -81,16 +81,33 @@ const useStyles = makeStyles(() => ({
 }))
 
 export const Chat = () => {
-  const {chatType, chatId, wideScreen, chatHandler, currentUser, chatPersonal, chatGroup, changeChatPersonal, changeChatGroup} = useContext(AppContext)
+  const { chatType, chatId, wideScreen, chatHandler, currentUser, chatPersonal, chatGroup, changeChatPersonal, changeChatGroup } = useContext(AppContext)
   const empty = useRef(null)
   const classes = useStyles()
 
   useEffect(() => {
-  // Скролл чата вниз до последнего сообщения
+    // Скролл чата вниз до последнего сообщения
     empty.current.scrollIntoView()
   })
 
+  const getMenuData = (actionType, postId) => {
+    if (actionType == 'remove') {
+      removePost(postId)
+    }
+  }
 
+  const removePost = (postId) => {
+    const currentChat = chatType ? chatPersonal : chatGroup
+    const index = currentChat.findIndex(elem => elem.chatId === chatId)
+    const currentDialog = currentChat[index]
+    currentDialog.dialog.splice(postId, 1)
+    const newChat = [...currentChat.slice(0, index), currentDialog, ...currentChat.slice(index + 1)]
+    if (chatType) {
+      changeChatPersonal(newChat)
+    } else {
+      changeChatGroup(newChat)
+    }
+  }
 
   const addPost = (post) => {
     const newPost = {
@@ -98,7 +115,7 @@ export const Chat = () => {
       date: new Date(),
       text: post
     }
-    console.log('Add post')
+
     let newChat
     const currentChat = chatType ? chatPersonal : chatGroup
     const index = currentChat.findIndex(elem => elem.chatId === chatId)
@@ -166,6 +183,7 @@ export const Chat = () => {
           {!chatType && <p className={[classes.text, classes.person].join(' ')}>{name.firstName} {name.lastName}</p>}
           <p className={classes.text}>{item.text}</p>
           <span className={classes.date}>{item.date.toLocaleDateString()} {item.date.toLocaleTimeString()}</span>
+          <PostMenu getMenuData={getMenuData} postId={i} />
         </div>
       )
     })
