@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import SendIcon from '@material-ui/icons/Send'
@@ -41,6 +41,16 @@ const useStyles = makeStyles((theme) => ({
 export default function PostAddForm(props) {
   const classes = useStyles()
   const [value, setValue] = useState('')
+  const [postId, setPostId] = useState('')
+  const input = useRef(null)
+
+  useEffect(() => {
+    if(props.editValue.value) {
+      setValue(props.editValue.value)
+      setPostId(props.editValue.postId)
+      input.current.querySelector('textarea').focus()
+    }
+  }, [props.editValue])
 
   const handleChange = (event) => {
     setValue(event.target.value)
@@ -49,7 +59,7 @@ export default function PostAddForm(props) {
   const onSubmit = (e) => {
     e.preventDefault()
     if (value.length == 0) return
-    props.addPost(value)
+    props.addPost(value, postId)
     setValue('')
   }
 
@@ -66,6 +76,7 @@ export default function PostAddForm(props) {
           variant="outlined"
           fullWidth={true}
           className={classes.field}
+          ref={input}
           InputProps={{
             endAdornment: (
               <button className={classes.send}><SendIcon /></button>

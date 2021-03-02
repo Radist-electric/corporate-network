@@ -1,10 +1,10 @@
-# Getting Started with Create React App
+# Приложение "Корпоративный чат"
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Это проект был создан с помощью [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Доступные скрипты
 
-In the project directory, you can run:
+Выберите папку проекта и в командной строке запустите:
 
 ### `npm start`
 

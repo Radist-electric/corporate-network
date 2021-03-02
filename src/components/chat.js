@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Avatar from '@material-ui/core/Avatar'
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace'
@@ -84,6 +84,10 @@ export const Chat = () => {
   const { chatType, chatId, wideScreen, chatHandler, currentUser, chatPersonal, chatGroup, changeChatPersonal, changeChatGroup } = useContext(AppContext)
   const empty = useRef(null)
   const classes = useStyles()
+  const [editValue, setEditValue] = useState({
+    value: '',
+    postId: null
+  })
 
   useEffect(() => {
     // Скролл чата вниз до последнего сообщения
@@ -93,9 +97,18 @@ export const Chat = () => {
   const getMenuData = (actionType, postId) => {
     if (actionType == 'remove') {
       removePost(postId)
+    } else if (actionType == 'edit') {
+      const currentChat = chatType ? chatPersonal : chatGroup
+      const index = currentChat.findIndex(elem => elem.chatId === chatId)
+      const currentDialog = currentChat[index]
+      setEditValue({
+        value: currentDialog.dialog[postId].text,
+        postId
+      })
     }
   }
 
+  // Удалить запись
   const removePost = (postId) => {
     const currentChat = chatType ? chatPersonal : chatGroup
     const index = currentChat.findIndex(elem => elem.chatId === chatId)
@@ -109,7 +122,9 @@ export const Chat = () => {
     }
   }
 
-  const addPost = (post) => {
+  //Добавить или редактировать запись
+  const addPost = (post, postId) => {
+
     const newPost = {
       id: currentUser,
       date: new Date(),
@@ -119,16 +134,31 @@ export const Chat = () => {
     let newChat
     const currentChat = chatType ? chatPersonal : chatGroup
     const index = currentChat.findIndex(elem => elem.chatId === chatId)
-    if (index == -1) {
+
+    // Новая запись в пустом чате
+    if (index == -1 && !editValue.value) {
       const newDialog = {
         chatId: chatId,
         dialog: [newPost]
       }
       newChat = [...currentChat, newDialog]
-    } else {
+      // Новая запись в непустом чате
+    } else if (!editValue.value) {
       const currentDialog = currentChat[index]
       currentDialog.dialog.push(newPost)
       newChat = [...currentChat.slice(0, index), currentDialog, ...currentChat.slice(index + 1)]
+      // Редактировать запись
+    } else {
+      const currentDialog = currentChat[index]
+      currentDialog.dialog[postId].text = post
+      currentDialog.dialog[postId].date = new Date()
+      newChat = [...currentChat.slice(0, index), currentDialog, ...currentChat.slice(index + 1)]
+
+      setEditValue({
+        value: '',
+        postId: null
+      })
+
     }
 
     if (chatType) {
@@ -138,6 +168,7 @@ export const Chat = () => {
     }
   }
 
+  // Создать шапку чата
   const header = chatType ?
     dataUsers.filter((item) => {
       return item.id == chatId
@@ -169,6 +200,7 @@ export const Chat = () => {
       )
     })
 
+  // Создать тело чата
   const getChat = chatType ? chatPersonal : chatGroup
   const showChat = getChat.filter((item) => {
     return item.chatId == chatId
@@ -199,7 +231,7 @@ export const Chat = () => {
         {chat}
         <div className={classes.empty} ref={empty}></div>
       </div>
-      <PostAddForm addPost={addPost} />
+      <PostAddForm addPost={addPost} editValue={editValue} />
     </>
   )
 }
