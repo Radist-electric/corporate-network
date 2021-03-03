@@ -215,7 +215,7 @@ export const Chat = () => {
           {!chatType && <p className={[classes.text, classes.person].join(' ')}>{name.firstName} {name.lastName}</p>}
           <p className={classes.text}>{item.text}</p>
           <span className={classes.date}>{item.date.toLocaleDateString()} {item.date.toLocaleTimeString()}</span>
-          <PostMenu getMenuData={getMenuData} postId={i} />
+          {item.id == currentUser && <PostMenu getMenuData={getMenuData} postId={i} />}
         </div>
       )
     })

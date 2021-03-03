@@ -8,63 +8,77 @@
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Приложение запустится в режиме Development.\
+Откройте [http://localhost:3000](http://localhost:3000), чтобы посмотреть его в браузере.
+При редактировании страница будет перезагружаться.\
+Также в консоли вы увидите любые ошибки.
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Сборка приложения в папку `build` в режиме Production.\
+На выходе получаем сборку, оптимизированную для достижения максимальной производительности.
+Также сборка минифицирована.\
+Приложение готово к развёртыванию на сервере!
+Более подробную информацию про деплой смотрите [здесь](https://facebook.github.io/create-react-app/docs/deployment).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## О приложении
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Данное приложение является примером работы некоего корпоративного мессенджера. Его идея заключается в демонстрации возможностей React. Для реального использования в качестве корпоративной сети приложение не подходит, т.к. требует разработки серверной части.
 
-### `npm run eject`
+### Начало работы
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+При запуске приложения происходит инициализация:
+1. Данные чатов загружаются из статического файла.
+2. Определяется ширина экрана - приложение отображается в мобильном виде или подстраивается под широкий экран.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Интерфейс
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+В верхней части экрана меню со страницами приложения:
+1. Чаты.
+2. Регистрация (будет разработана позже).
+3. Личный кабинет (будет разработан позже).
+4. О приложении.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Основная часть сайта разбита на два окна:
+1. Список чатов.
+2. Поле чата.
 
-## Learn More
+### Список чатов
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+В приложении два типа чатов:
+1. Групповой чат. Отображается имя чата. Раскрыть список участников кнопкой "Чат" слева. Переход в чат стрелкой справа.
+2. Личный чат. Отображается имя и профессия собеседника. Переход в чат нажатием по всей строке. 
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Поле чата
 
-### Code Splitting
+#### Шапка
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+В верхней части чата отображается шапка двух типов:
+1. Для группового чата название чата и количество участников.
+2. Для личного чата имя собеседника.
 
-### Analyzing the Bundle Size
+#### Диалог
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Ниже в поле чата отображается диалог, который автоматически прокручивается вниз и стремится показать последнее сообщение. Доступна ручная прокрутка вверх.
+Тексты диалога делятся на два типа:
+1. Сообщение пользователя приложения отображается в окне правее в полях жёлтого цвета.
+2. Сообщения других участников чата отображаются в окне левее в полях серого цвета.
 
-### Making a Progressive Web App
+Каждое сообщение содержит:
+1. Имя (только в групповом чате).
+2. Текст сообщения.
+3. Дата и время публикации.
+4. Дополнительное меню в правой части записи (три точки, расположенные друг над другом).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Меню доступно только для сообщений текущего пользователя приложения. Меню содержит действия:
+1. Удалить запись.
+2. Редактировать запись.
 
-### Advanced Configuration
+#### Поле ввода сообщения
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Поле для ввода текста содержит две видимые строки. При вводе более длинного текста он будет смещаться вверх и скрываться. В правой части кнопка для отправки сообщения.
 
-### Deployment
+## О React
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Вы можете узнать больше о создании React приложения в документации [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Узнать больше о React в этойдокументации [React documentation](https://reactjs.org/).

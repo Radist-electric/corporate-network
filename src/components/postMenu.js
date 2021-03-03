@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     },
     '& li': {
       padding: '5px 10px',
-      fontSize: '12px',
+      fontSize: '14px',
       [theme.breakpoints.down('sm')]: {
         minHeight: 'initial'
       },
