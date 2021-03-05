@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import { Header } from './components/header'
@@ -6,8 +6,8 @@ import { useRoutes } from './routes'
 import { AppContext } from './context/AppContext'
 import Paper from '@material-ui/core/Paper'
 import bg from './images/bg-1200.png'
-import { dataPersonalChat } from './data/dataPersonalChat'
-import { dataGroupChat } from './data/dataGroupChat'
+import { dataPersonalChatInit } from './data/dataPersonalChat'
+import { dataGroupChatInit } from './data/dataGroupChat'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,16 +36,74 @@ const useStyles = makeStyles((theme) => ({
 
 const wideScreen = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) >= 960
 
+const isLocalStorage = storageAvailable('localStorage')
+const storageCurrentUser = 'currentUser'
+let dataCurrentUser
+
+if (isLocalStorage) {
+  dataCurrentUser = JSON.parse(localStorage.getItem(storageCurrentUser))
+  if (!dataCurrentUser) {
+    dataCurrentUser = 7
+    localStorage.setItem(storageCurrentUser, JSON.stringify(dataCurrentUser))
+  }
+} else {
+  dataCurrentUser = 7
+}
+
+const storagePersonalChatName = `dataPersonalChat-${dataCurrentUser}`,
+storageGroupChatName = 'dataGroupChat'
+
+let dataPersonalChat,
+dataGroupChat
+
+if (isLocalStorage) {
+  dataPersonalChat = JSON.parse(localStorage.getItem(storagePersonalChatName))
+  dataGroupChat = JSON.parse(localStorage.getItem(storageGroupChatName))
+  
+  if (!dataPersonalChat) {
+    localStorage.setItem(storagePersonalChatName, JSON.stringify(dataPersonalChatInit))
+    dataPersonalChat = dataPersonalChatInit
+  }
+  if (!dataGroupChat) {
+    localStorage.setItem(storageGroupChatName, JSON.stringify(dataGroupChatInit))
+    dataGroupChat = dataGroupChatInit
+  }
+} else {
+  dataPersonalChat = dataPersonalChatInit
+  dataGroupChat = dataGroupChatInit
+}
+
+function storageAvailable(type) {
+  try {
+    var storage = window[type],
+      x = '__storage_test__';
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    return true;
+  }
+  catch (e) {
+    return false;
+  }
+}
+
 const App = () => {
   const isAuth = true
   const classes = useStyles()
   const routes = useRoutes(isAuth)
-  const currentUser = 7
   const [chatType, setChatType] = useState(false) // chatType (true - личный, false - групповой)
   const [chatId, setChatId] = useState(0)
   const [showChat, setShowChat] = useState(wideScreen)
   const [chatPersonal, setChatPersonal] = useState(dataPersonalChat)
   const [chatGroup, setChatGroup] = useState(dataGroupChat)
+  const [currentUser, setCurrentUser] = useState(dataCurrentUser)
+
+  useEffect(() => {
+    localStorage.setItem(storagePersonalChatName, JSON.stringify(chatPersonal))
+  }, [chatPersonal])
+
+  useEffect(() => {
+    localStorage.setItem(storageGroupChatName, JSON.stringify(chatGroup))
+  }, [chatGroup])
 
   const dialogHandler = (type, id) => {
     setChatType(type)

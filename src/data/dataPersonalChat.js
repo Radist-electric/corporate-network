@@ -1,4 +1,4 @@
-export const dataPersonalChat = [
+export const dataPersonalChatInit = [
   {
     chatId: 1,
     dialog: [

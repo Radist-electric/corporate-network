@@ -1,4 +1,4 @@
-export const dataGroupChat = [
+export const dataGroupChatInit = [
   {
     chatId: 0,
     dialog: [

@@ -210,18 +210,18 @@ export const Chat = () => {
       const name = dataUsers.filter((person) => {
         return person.id == item.id
       })[0]
+      const date = new Date(Date.parse(item.date))
       return (
-        <div className={[classes.textWrap, item.id == currentUser ? classes.textWrapRight : ''].join(' ')} key={i}>
+         <div className={[classes.textWrap, item.id == currentUser ? classes.textWrapRight : ''].join(' ')} key={i}>
           {!chatType && <p className={[classes.text, classes.person].join(' ')}>{name.firstName} {name.lastName}</p>}
           <p className={classes.text}>{item.text}</p>
-          <span className={classes.date}>{item.date.toLocaleDateString()} {item.date.toLocaleTimeString()}</span>
+          <span className={classes.date}>{date.toLocaleDateString()} {date.toLocaleTimeString()}</span>
           {item.id == currentUser && <PostMenu getMenuData={getMenuData} postId={i} />}
         </div>
       )
     })
     :
     <p className={classes.text}>Сообщений нет</p>
-
 
   return (
     <>
