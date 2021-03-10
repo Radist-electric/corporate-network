@@ -1,4 +1,4 @@
-export const dataChats = [
+export const dataChatsInit = [
   {
     id: 0,
     name: 'Рабочий',

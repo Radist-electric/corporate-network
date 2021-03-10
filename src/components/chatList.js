@@ -5,8 +5,6 @@ import MuiAccordionSummary from '@material-ui/core/AccordionSummary'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward'
-import { dataUsers } from '../data/dataUsers'
-import { dataChats } from '../data/dataChats'
 import { AppContext } from '../context/AppContext'
 
 const useStyles = makeStyles((theme) => ({
@@ -119,10 +117,8 @@ const AccordionSummary = withStyles({
 })(MuiAccordionSummary)
 
 export const ChatList = () => {
-  const { dialogHandler, currentUser } = useContext(AppContext)
+  const { dialogHandler, currentUser, users, chats } = useContext(AppContext)
   const [expanded, setExpanded] = useState(false)
-  const [users, setUsers] = useState(dataUsers)
-  const [chats, setChats] = useState(dataChats)
   const classes = useStyles()
 
   const handleClick = (panel) => {

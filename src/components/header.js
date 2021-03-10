@@ -1,13 +1,6 @@
-import {
-  useState
-} from 'react'
-import {
-  NavLink,
-  useLocation
-} from 'react-router-dom'
-import {
-  makeStyles
-} from '@material-ui/core/styles'
+import { useState } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
 import MenuIcon from '@material-ui/icons/Menu'
 import logo from '../images/logo.svg'
 
@@ -27,16 +20,16 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.down('sm')]: {
         height: '40px',
       },
-    }
+    },
   },
   link: {
     marginRight: '20px',
     lineHeight: '25px',
     color: '#FFFFFF',
-    textDecoration: 'none'
+    textDecoration: 'none',
   },
   active: {
-    color: '#FFFF33'
+    color: '#FFFF33',
   },
   menu: {
     display: 'flex',
@@ -51,11 +44,11 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'flex-end',
       padding: '10px',
       backgroundColor: '#454545',
-      borderRadius: '5px'
+      borderRadius: '5px',
     },
   },
   drop: {
-    display: 'flex'
+    display: 'flex',
   },
   burger: {
     display: 'none',
@@ -65,9 +58,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       display: 'block',
     },
-  }
+  },
 }))
-
 
 export const Header = () => {
   const classes = useStyles()
@@ -87,59 +79,58 @@ export const Header = () => {
     setMenu(false)
   }
 
-  return ( <
-    nav className = {
-      classes.root
-    } >
-    <
-    NavLink to = "/"
-    className = {
-      classes.logo
-    } > < img src = {
-      logo
-    }
-    alt = "logo" / > < /NavLink> <
-    div className = {
-      menuClasses.join(' ')
-    } >
-    <
-    NavLink to = "/"
-    className = {
-      curPath === '/' ? [classes.active, classes.link].join(' ') : classes.link
-    }
-    onClick = {
-      hideMenu
-    } > Чат < /NavLink> <
-    NavLink to = "/auth"
-    className = {
-      curPath === '/auth' ? [classes.active, classes.link].join(' ') : classes.link
-    }
-    onClick = {
-      hideMenu
-    } > Авторизация < /NavLink> <
-    NavLink to = "/profile"
-    className = {
-      curPath === '/profile' ? [classes.active, classes.link].join(' ') : classes.link
-    }
-    onClick = {
-      hideMenu
-    } > Личный кабинет < /NavLink> <
-    NavLink to = "/about"
-    className = {
-      curPath === '/about' ? [classes.active, classes.link].join(' ') : classes.link
-    }
-    onClick = {
-      hideMenu
-    } > О чате < /NavLink> <
-    /div> <
-    MenuIcon className = {
-      classes.burger
-    }
-    onClick = {
-      toggleMenu
-    }
-    /> <
-    /nav>
-
+  return (
+    <nav className={classes.root}>
+      <NavLink to="/" className={classes.logo}>
+        <img src={logo} alt="logo" />
+      </NavLink>
+      <div className={menuClasses.join(' ')}>
+        <NavLink
+          to="/"
+          className={
+            curPath === '/'
+              ? [classes.active, classes.link].join(' ')
+              : classes.link
+          }
+          onClick={hideMenu}
+        >
+          Чат
+        </NavLink>
+        <NavLink
+          to="/profile"
+          className={
+            curPath === '/profile'
+              ? [classes.active, classes.link].join(' ')
+              : classes.link
+          }
+          onClick={hideMenu}
+        >
+          Личный кабинет
+        </NavLink>
+        <NavLink
+          to="/about"
+          className={
+            curPath === '/about'
+              ? [classes.active, classes.link].join(' ')
+              : classes.link
+          }
+          onClick={hideMenu}
+        >
+          О приложении
+        </NavLink>
+        <NavLink
+          to="/auth"
+          className={
+            curPath === '/auth'
+              ? [classes.active, classes.link].join(' ')
+              : classes.link
+          }
+          onClick={hideMenu}
+        >
+          Войти
+        </NavLink>
+      </div>
+      <MenuIcon className={classes.burger} onClick={toggleMenu} />
+    </nav>
   )
 }

@@ -2,8 +2,6 @@ import { useState, useEffect, useRef, useContext } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Avatar from '@material-ui/core/Avatar'
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace'
-import { dataUsers } from '../data/dataUsers'
-import { dataChats } from '../data/dataChats'
 import PostAddForm from './postAddForm'
 import PostMenu from './postMenu'
 import { AppContext } from '../context/AppContext'
@@ -81,7 +79,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 export const Chat = () => {
-  const { chatType, chatId, wideScreen, chatHandler, currentUser, chatPersonal, chatGroup, changeChatPersonal, changeChatGroup } = useContext(AppContext)
+  const { chatType, chatId, wideScreen, chatHandler, currentUser, chatPersonal, chatGroup, users, chats, changeChatPersonal, changeChatGroup } = useContext(AppContext)
   const empty = useRef(null)
   const classes = useStyles()
   const [editValue, setEditValue] = useState({
@@ -170,7 +168,7 @@ export const Chat = () => {
 
   // Создать шапку чата
   const header = chatType ?
-    dataUsers.filter((item) => {
+    users.filter((item) => {
       return item.id == chatId
     }).map((person, i) => {
       return (
@@ -185,7 +183,7 @@ export const Chat = () => {
       )
     })
     :
-    dataChats.filter((item) => {
+    chats.filter((item) => {
       return item.id == chatId
     }).map((chat, i) => {
       return (
@@ -207,7 +205,7 @@ export const Chat = () => {
   })[0]
   const chat = showChat ?
     showChat.dialog.map((item, i) => {
-      const name = dataUsers.filter((person) => {
+      const name = users.filter((person) => {
         return person.id == item.id
       })[0]
       const date = new Date(Date.parse(item.date))
