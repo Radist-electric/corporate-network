@@ -109,7 +109,7 @@ function storageAvailable(type) {
   }
 }
 
-// Найдём первый попавшийся групповой чат, куда имеет доступ имеющийся пользователь
+// Найдём первый попавшийся групповой чат, куда имеет доступ текущий пользователь
 const findFirstGroupChat = dataChats.filter((item) => {
   return item.users.find(el => el == dataCurrentUser) != undefined
 })[0].id
@@ -213,8 +213,13 @@ const App = () => {
     setUsers(newDataUsers)
   }
 
+  // Войти в систему
+  const loginUser = (id) => {
+    setCurrentUser(id)
+  }
+
   return (
-    <AppContext.Provider value={{ isAuth, chatType, chatId, dialogHandler, chatHandler, wideScreen, showChat, currentUser, chatPersonal, chatGroup, users, chats, changeChatPersonal, changeChatGroup, addNewUser }}>
+    <AppContext.Provider value={{ isAuth, chatType, chatId, dialogHandler, chatHandler, wideScreen, showChat, currentUser, chatPersonal, chatGroup, users, chats, changeChatPersonal, changeChatGroup, addNewUser, loginUser }}>
       <Router>
         <div className={classes.root}>
           <Paper elevation={3}>

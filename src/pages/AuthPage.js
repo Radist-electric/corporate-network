@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const dataPersonRegister = [
+const dataPersonRegisterInit = [
   {
     label: 'Электронная почта',
     type: 'email',
@@ -84,35 +84,46 @@ const dataPersonRegister = [
   }
 ]
 
-const dataPersonAuth = [
+const dataPersonAuthInit = [
   {
     label: 'Электронная почта',
     type: 'email',
     error: false,
+    helperText: 'Адрес электронной почты неверный',
     value: ''
   },
   {
     label: 'Пароль',
     type: 'password',
     error: false,
+    helperText: 'Пароль неверный',
     value: ''
   }
 ]
 
 export const AuthPage = () => {
-  const { users, addNewUser } = useContext(AppContext)
+  const { users, addNewUser, loginUser } = useContext(AppContext)
   const classes = useStyles()
-  const [inputDataReg, setinputDataReg] = useState(dataPersonRegister)
+  const [inputDataReg, setinputDataReg] = useState(dataPersonRegisterInit)
+  const [inputDataAuth, setinputDataAuth] = useState(dataPersonAuthInit)
   const [userExist, setUserExist] = useState(false)
 
-  const onChangeHandler = (event, index) => {
+  const onChangeRegHandler = (event, index) => {
     const newInputData = { ...inputDataReg[index] }
     newInputData.value = event.target.value
     const newInputDataReg = [...inputDataReg.slice(0, index), newInputData, ...inputDataReg.slice(index + 1)]
     setinputDataReg(newInputDataReg)
   }
 
-  const onSubmit = () => {
+  const onChangeAuthHandler = (event, index) => {
+    const newInputData = { ...inputDataAuth[index] }
+    newInputData.value = event.target.value
+    const newInputDataAuth = [...inputDataAuth.slice(0, index), newInputData, ...inputDataAuth.slice(index + 1)]
+    setinputDataAuth(newInputDataAuth)
+  }
+
+  // Обработка регистрации
+  const onRegSubmit = () => {
     let isFormValid = true
 
     const newInputDataReg = inputDataReg.map((item) => {
@@ -124,13 +135,12 @@ export const AuthPage = () => {
       if (item.type === 'email') {
         isValid = is.email(item.value) && isValid
         isValid = !isEmailExist(item.value) && isValid
+        setUserExist(isEmailExist(item.value))
       }
       item.error = !isValid
       isFormValid = isValid && isFormValid
       return item
     })
-    
-    setinputDataReg(newInputDataReg)
 
     if (isFormValid) {
       const newUser = {
@@ -141,21 +151,58 @@ export const AuthPage = () => {
         profession: inputDataReg[4].value
       }
       addNewUser(newUser)
-      setinputDataReg(dataPersonRegister)
+      setinputDataReg(dataPersonRegisterInit)
+    } else {
+      setinputDataReg(newInputDataReg)
+    }
+
+  }
+
+  // Обработка авторизации
+  const onAuthSubmit = () => {
+    let isFormValid = true
+
+    const newInputDataAuth = [...inputDataAuth]
+    const email = newInputDataAuth[0].value
+    const emailError = !isEmailExist(email)
+    newInputDataAuth[0].error = emailError
+    isFormValid = !emailError && isFormValid
+
+    let getPasswordComparison = null
+    if (!emailError) {
+      getPasswordComparison = isPasswordCorrect(email, newInputDataAuth[1].value)
+      const passwordError = getPasswordComparison === null ? true : false
+      newInputDataAuth[1].error = passwordError
+      isFormValid = !passwordError && isFormValid
+    }
+    
+    if (isFormValid) {
+      loginUser(getPasswordComparison)
+      setinputDataAuth(dataPersonAuthInit)
+    } else {
+      setinputDataAuth(newInputDataAuth)
     }
 
   }
 
   // Проверяем, существует ли такой пользователь (email)
   const isEmailExist = (email) => {
-    const findUser = users.filter((user)=> {
+    const findUser = users.filter((user) => {
       return user.email === email
     })
-    setUserExist(!!findUser.length)
     return !!findUser.length
   }
 
-  const dataPersonBlock = inputDataReg.map((person, i) => {
+  // Проверяем, верный ли пароль
+  const isPasswordCorrect = (email, password) => {
+    const findUser = users.filter((user) => {
+      return user.email === email
+    })
+    // Возвращаем null, если пароль не совпадает, и id пользователя, если пароль совпал
+    return findUser[0].password === password ? findUser[0].id : null
+  }
+
+  const dataRegBlock = inputDataReg.map((person, i) => {
     return (
       <li className={classes.input} key={i}>
         <TextField
@@ -167,7 +214,25 @@ export const AuthPage = () => {
           fullWidth={true}
           variant="outlined"
           value={person.value}
-          onChange={event => onChangeHandler(event, i)}
+          onChange={event => onChangeRegHandler(event, i)}
+        />
+      </li>
+    )
+  })
+
+  const dataAuthBlock = inputDataAuth.map((person, i) => {
+    return (
+      <li className={classes.input} key={i}>
+        <TextField
+          error={person.error}
+          helperText={person.error && person.helperText}
+          required
+          label={person.label}
+          type={person.type}
+          fullWidth={true}
+          variant="outlined"
+          value={person.value}
+          onChange={event => onChangeAuthHandler(event, i)}
         />
       </li>
     )
@@ -180,21 +245,28 @@ export const AuthPage = () => {
           <Grid item xs={12} sm={6}>
             <h2>Регистрация</h2>
             <ul className={classes.inputBlock}>
-              {dataPersonBlock}
+              {dataRegBlock}
             </ul>
             <Button
               className={classes.button}
               variant="contained"
               color="primary"
-              onClick={onSubmit}
+              onClick={onRegSubmit}
               fullWidth={true}
             >Зарегистрироваться</Button>
           </Grid>
           <Grid item xs={12} sm={6}>
             <h2>Авторизация</h2>
-            <p>. . .</p>
-            <p>В процессе</p>
-            <p>. . .</p>
+            <ul className={classes.inputBlock}>
+              {dataAuthBlock}
+            </ul>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              onClick={onAuthSubmit}
+              fullWidth={true}
+            >Войти</Button>
           </Grid>
         </Grid>
       </Paper>
