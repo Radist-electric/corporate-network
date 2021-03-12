@@ -1,4 +1,5 @@
 import { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import is from 'is_js'
 import Paper from '@material-ui/core/Paper'
@@ -103,6 +104,7 @@ const dataPersonAuthInit = [
 
 export const AuthPage = () => {
   const { users, addNewUser, loginUser } = useContext(AppContext)
+  const history = useHistory()
   const classes = useStyles()
   const [inputDataReg, setinputDataReg] = useState(dataPersonRegisterInit)
   const [inputDataAuth, setinputDataAuth] = useState(dataPersonAuthInit)
@@ -152,6 +154,7 @@ export const AuthPage = () => {
       }
       addNewUser(newUser)
       setinputDataReg(dataPersonRegisterInit)
+      history.push('/profile')
     } else {
       setinputDataReg(newInputDataReg)
     }
@@ -179,6 +182,7 @@ export const AuthPage = () => {
     if (isFormValid) {
       loginUser(getPasswordComparison)
       setinputDataAuth(dataPersonAuthInit)
+      history.push('/profile')
     } else {
       setinputDataAuth(newInputDataAuth)
     }

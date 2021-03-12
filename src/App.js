@@ -216,6 +216,8 @@ const App = () => {
   // Войти в систему
   const loginUser = (id) => {
     setCurrentUser(id)
+    localStorage.setItem(storageCurrentUserName, JSON.stringify(id))
+    storagePersonalChatName = `dataPersonalChat-${id}`
   }
 
   return (
