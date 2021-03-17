@@ -142,22 +142,6 @@ const App = () => {
     localStorage.setItem(storageDataChatsName, JSON.stringify(chats))
   }, [chats])
 
-  // При обновлении данных пользователей сохраняем их в LocaleStorage
-  useEffect(() => {
-    localStorage.setItem(storageDataUsersName, JSON.stringify(users))
-    const newId = users.length - 1
-    setCurrentUser(newId)
-    localStorage.setItem(storageCurrentUserName, JSON.stringify(newId))
-    storagePersonalChatName = `dataPersonalChat-${newId}`
-    // Если такого id пользователя нет в чате "Флуд",
-    if (chats[1].users.find(item => item == newId) == undefined) {
-      // то добавляем туда новый id пользователя
-      let newChats = JSON.parse(JSON.stringify(chats))
-      newChats[1].users.push(newId)
-      setChats(newChats)
-    }
-  }, [users])
-
   // При обновлении текущего пользователя получаем данные текущего чата из LocaleStorage
   useEffect(() => {
     if (isLocalStorage) {
@@ -208,15 +192,28 @@ const App = () => {
 
   // Добавить нового пользователя
   const addNewUser = (newPerson) => {
-    newPerson.id = users.length
+    const newId = users.length
+    newPerson.id = newId
     const newDataUsers = [...users, newPerson]
     setUsers(newDataUsers)
+    // При обновлении данных пользователей сохраняем их в LocaleStorage
+    localStorage.setItem(storageDataUsersName, JSON.stringify(newDataUsers))
+    localStorage.setItem(storageCurrentUserName, JSON.stringify(newId))
+    storagePersonalChatName = `dataPersonalChat-${newId}`
+    setCurrentUser(newId)
+    // Если такого id пользователя нет в чате "Флуд",
+    if (chats[1].users.find(item => item == newId) == undefined) {
+      // то добавляем туда новый id пользователя
+      let newChats = JSON.parse(JSON.stringify(chats))
+      newChats[1].users.push(newId)
+      setChats(newChats)
+    }
   }
 
   // Войти в систему
   const loginUser = (id) => {
-    setCurrentUser(id)
     localStorage.setItem(storageCurrentUserName, JSON.stringify(id))
+    setCurrentUser(id)
     storagePersonalChatName = `dataPersonalChat-${id}`
   }
 
