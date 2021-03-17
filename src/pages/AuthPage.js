@@ -179,7 +179,7 @@ export const AuthPage = () => {
       newInputDataAuth[1].error = passwordError
       isFormValid = !passwordError && isFormValid
     }
-    
+
     if (isFormValid) {
       loginUser(getPasswordComparison)
       setinputDataAuth(dataPersonAuthInit)

@@ -1,8 +1,9 @@
-import {createContext} from 'react'
+import { createContext } from 'react'
 
-function noop() {}
+function noop() { }
 
 export const AppContext = createContext({
+  isLocalStorage: false,
   isAuth: true,
   chatType: false,
   chatId: 0,

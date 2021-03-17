@@ -79,7 +79,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 export const Chat = () => {
-  const { chatType, chatId, wideScreen, chatHandler, currentUser, chatPersonal, chatGroup, users, chats, changeChatPersonal, changeChatGroup } = useContext(AppContext)
+  const { isLocalStorage, chatType, chatId, wideScreen, chatHandler, currentUser, chatPersonal, chatGroup, users, chats, changeChatPersonal, changeChatGroup } = useContext(AppContext)
   const empty = useRef(null)
   const classes = useStyles()
   const [editValue, setEditValue] = useState({
@@ -161,9 +161,41 @@ export const Chat = () => {
 
     if (chatType) {
       changeChatPersonal(newChat)
+      // Создаём запись в личном чате собеседника при работающем LocalStorage
+      if (isLocalStorage) {
+        let storageCompanionChatName = `dataPersonalChat-${chatId}`,
+          dataCompanionChat
+
+        // Получаем данные из LocalStorage
+        dataCompanionChat = JSON.parse(localStorage.getItem(storageCompanionChatName))
+        if (!dataCompanionChat) {
+          localStorage.setItem(storageCompanionChatName, JSON.stringify([]))
+          dataCompanionChat = JSON.parse(JSON.stringify([]))
+        }
+
+        const newDialog = {
+          chatId: currentUser,
+          dialog: [newPost]
+        }
+
+        const index = dataCompanionChat.findIndex(elem => elem.chatId === currentUser)
+
+        if (index == -1) {
+          // Если у собеседника вообще нет личных чатов или есть чаты, но не с текущим пользователем, то добавляем ему новый чат и делаем запись в LocalStorage,
+          newChat = [...dataCompanionChat, newDialog]
+          localStorage.setItem(storageCompanionChatName, JSON.stringify(newChat))
+        } else {
+          // иначе редактируем уже существующий чат
+          const currentDialog = dataCompanionChat[index]
+          currentDialog.dialog.push(newPost)
+          newChat = [...dataCompanionChat.slice(0, index), currentDialog, ...dataCompanionChat.slice(index + 1)]
+          localStorage.setItem(storageCompanionChatName, JSON.stringify(newChat))
+        }
+      }
     } else {
       changeChatGroup(newChat)
     }
+
   }
 
   // Создать шапку чата
@@ -210,7 +242,7 @@ export const Chat = () => {
       })[0]
       const date = new Date(Date.parse(item.date))
       return (
-         <div className={[classes.textWrap, item.id == currentUser ? classes.textWrapRight : ''].join(' ')} key={i}>
+        <div className={[classes.textWrap, item.id == currentUser ? classes.textWrapRight : ''].join(' ')} key={i}>
           {!chatType && <p className={[classes.text, classes.person].join(' ')}>{name.firstName} {name.lastName}</p>}
           <p className={classes.text}>{item.text}</p>
           <span className={classes.date}>{date.toLocaleDateString()} {date.toLocaleTimeString()}</span>

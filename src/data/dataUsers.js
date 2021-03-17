@@ -1,4 +1,4 @@
-export const dataUsersInit =  [
+export const dataUsersInit = [
   {
     id: 0,
     email: 'a0@mail.ru',

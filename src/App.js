@@ -219,8 +219,8 @@ const App = () => {
 
   // Сброс до первоначального состояния. Инициализация.
   const onInit = () => {
-    for(let i=0; i<users.length; i++) {
-      if(localStorage.getItem(`dataPersonalChat-${i}`)) {
+    for (let i = 0; i < users.length; i++) {
+      if (localStorage.getItem(`dataPersonalChat-${i}`)) {
         localStorage.removeItem(`dataPersonalChat-${i}`)
       }
     }
@@ -232,7 +232,7 @@ const App = () => {
     localStorage.setItem(storagePersonalChatName, JSON.stringify(dataPersonalChatInit))
     localStorage.setItem(storageDataChatsName, JSON.stringify(dataChatsInit))
     localStorage.setItem(storageGroupChatName, JSON.stringify(dataGroupChatInit))
-    
+
     setChats(dataChatsInit)
     setChatGroup(dataGroupChatInit)
     setCurrentUser(newCurrentUser)
@@ -243,7 +243,7 @@ const App = () => {
   }
 
   return (
-    <AppContext.Provider value={{ isAuth, chatType, chatId, dialogHandler, chatHandler, wideScreen, showChat, currentUser, chatPersonal, chatGroup, users, chats, changeChatPersonal, changeChatGroup, addNewUser, loginUser, onInit }}>
+    <AppContext.Provider value={{ isLocalStorage, isAuth, chatType, chatId, dialogHandler, chatHandler, wideScreen, showChat, currentUser, chatPersonal, chatGroup, users, chats, changeChatPersonal, changeChatGroup, addNewUser, loginUser, onInit }}>
       <Router>
         <div className={classes.root}>
           <Paper elevation={3}>
