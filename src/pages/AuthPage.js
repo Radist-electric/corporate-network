@@ -42,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     width: '500px',
-    maxWidth: '100%'
+    maxWidth: '100%',
+    marginBottom: '30px'
   },
 }))
 
@@ -103,7 +104,7 @@ const dataPersonAuthInit = [
 ]
 
 export const AuthPage = () => {
-  const { users, addNewUser, loginUser } = useContext(AppContext)
+  const { users, addNewUser, loginUser, onInit } = useContext(AppContext)
   const history = useHistory()
   const classes = useStyles()
   const [inputDataReg, setinputDataReg] = useState(dataPersonRegisterInit)
@@ -206,6 +207,12 @@ export const AuthPage = () => {
     return findUser[0].password === password ? findUser[0].id : null
   }
 
+  // Обработка сброса
+  const onInitSubmit = () => {
+    onInit()
+    history.push('/profile')
+  }
+
   const dataRegBlock = inputDataReg.map((person, i) => {
     return (
       <li className={classes.input} key={i}>
@@ -271,6 +278,15 @@ export const AuthPage = () => {
               onClick={onAuthSubmit}
               fullWidth={true}
             >Войти</Button>
+            <h2>Сброс</h2>
+            <p>Удаление всех новых пользователей и диалогов из LocalStorage. Возврат приложения к первоначальному состоянию (инициализация).</p>
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              onClick={onInitSubmit}
+              fullWidth={true}
+            >Сброс</Button>
           </Grid>
         </Grid>
       </Paper>

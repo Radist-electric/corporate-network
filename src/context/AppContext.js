@@ -18,5 +18,6 @@ export const AppContext = createContext({
   changeChatPersonal: noop,
   changeChatGroup: noop,
   addNewUser: noop,
-  loginUser: noop
+  loginUser: noop,
+  initApp: noop
 })

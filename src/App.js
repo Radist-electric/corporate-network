@@ -50,14 +50,14 @@ if (isLocalStorage) {
   // Если в LocalStorage нет данных пользователей, то подгружаем стартовый набор
   if (!dataUsers) {
     localStorage.setItem(storageDataUsersName, JSON.stringify(dataUsersInit))
-    dataUsers = dataUsersInit
+    dataUsers = JSON.parse(JSON.stringify(dataUsersInit))
   }
   if (!dataCurrentUser) {
     dataCurrentUser = dataUsers.length - 1
     localStorage.setItem(storageCurrentUserName, JSON.stringify(dataCurrentUser))
   }
 } else {
-  dataUsers = dataUsersInit
+  dataUsers = JSON.parse(JSON.stringify(dataUsersInit))
   dataCurrentUser = dataUsers.length - 1
 }
 
@@ -77,23 +77,23 @@ if (isLocalStorage) {
   // Если в LocalStorage нет данных личных чатов текущего пользователя, то подгружаем стартовый набор
   if (!dataPersonalChat) {
     localStorage.setItem(storagePersonalChatName, JSON.stringify(dataPersonalChatInit))
-    dataPersonalChat = dataPersonalChatInit
+    dataPersonalChat = JSON.parse(JSON.stringify(dataPersonalChatInit))
   }
   // Если в LocalStorage нет данных группового чата, то подгружаем стартовый набор
   if (!dataGroupChat) {
     localStorage.setItem(storageGroupChatName, JSON.stringify(dataGroupChatInit))
-    dataGroupChat = dataGroupChatInit
+    dataGroupChat = JSON.parse(JSON.stringify(dataGroupChatInit))
   }
   // Если в LocalStorage нет данных о чатах, то подгружаем стартовый набор
   if (!dataChats) {
     localStorage.setItem(storageDataChatsName, JSON.stringify(dataChatsInit))
-    dataChats = dataChatsInit
+    dataChats = JSON.parse(JSON.stringify(dataChatsInit))
   }
 } else {
   // Если LocalStorage не доступен в браузере, то загружаем все данные из стартового набора
-  dataPersonalChat = dataPersonalChatInit
-  dataGroupChat = dataGroupChatInit
-  dataChats = dataChatsInit
+  dataPersonalChat = JSON.parse(JSON.stringify(dataPersonalChatInit))
+  dataGroupChat = JSON.parse(JSON.stringify(dataGroupChatInit))
+  dataChats = JSON.parse(JSON.stringify(dataChatsInit))
 }
 
 function storageAvailable(type) {
@@ -152,7 +152,7 @@ const App = () => {
     // Если такого id пользователя нет в чате "Флуд",
     if (chats[1].users.find(item => item == newId) == undefined) {
       // то добавляем туда новый id пользователя
-      let newChats = [...chats]
+      let newChats = JSON.parse(JSON.stringify(chats))
       newChats[1].users.push(newId)
       setChats(newChats)
     }
@@ -220,8 +220,33 @@ const App = () => {
     storagePersonalChatName = `dataPersonalChat-${id}`
   }
 
+  // Сброс до первоначального состояния. Инициализация.
+  const onInit = () => {
+    for(let i=0; i<users.length; i++) {
+      if(localStorage.getItem(`dataPersonalChat-${i}`)) {
+        localStorage.removeItem(`dataPersonalChat-${i}`)
+      }
+    }
+
+    localStorage.setItem(storageDataUsersName, JSON.stringify(dataUsersInit))
+    const newCurrentUser = dataUsersInit.length - 1
+    localStorage.setItem(storageCurrentUserName, JSON.stringify(newCurrentUser))
+    storagePersonalChatName = `dataPersonalChat-${newCurrentUser}`
+    localStorage.setItem(storagePersonalChatName, JSON.stringify(dataPersonalChatInit))
+    localStorage.setItem(storageDataChatsName, JSON.stringify(dataChatsInit))
+    localStorage.setItem(storageGroupChatName, JSON.stringify(dataGroupChatInit))
+    
+    setChats(dataChatsInit)
+    setChatGroup(dataGroupChatInit)
+    setCurrentUser(newCurrentUser)
+    setUsers(dataUsersInit)
+    setChatPersonal(dataPersonalChatInit)
+    setChatType(false)
+    setChatId(findFirstGroupChat)
+  }
+
   return (
-    <AppContext.Provider value={{ isAuth, chatType, chatId, dialogHandler, chatHandler, wideScreen, showChat, currentUser, chatPersonal, chatGroup, users, chats, changeChatPersonal, changeChatGroup, addNewUser, loginUser }}>
+    <AppContext.Provider value={{ isAuth, chatType, chatId, dialogHandler, chatHandler, wideScreen, showChat, currentUser, chatPersonal, chatGroup, users, chats, changeChatPersonal, changeChatGroup, addNewUser, loginUser, onInit }}>
       <Router>
         <div className={classes.root}>
           <Paper elevation={3}>
