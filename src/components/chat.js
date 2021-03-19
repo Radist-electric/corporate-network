@@ -114,6 +114,7 @@ export const Chat = () => {
     currentDialog.dialog.splice(postId, 1)
     const newChat = [...currentChat.slice(0, index), currentDialog, ...currentChat.slice(index + 1)]
     if (chatType) {
+      // Для личного чата запись удаляется только у текущего пользователя.
       changeChatPersonal(newChat)
     } else {
       changeChatGroup(newChat)
@@ -129,7 +130,8 @@ export const Chat = () => {
       text: post
     }
 
-    let newChat
+    let newChat,
+      editedPostDate
     const currentChat = chatType ? chatPersonal : chatGroup
     const index = currentChat.findIndex(elem => elem.chatId === chatId)
 
@@ -149,6 +151,7 @@ export const Chat = () => {
     } else {
       const currentDialog = currentChat[index]
       currentDialog.dialog[postId].text = post
+      editedPostDate = currentDialog.dialog[postId].date
       currentDialog.dialog[postId].date = new Date()
       newChat = [...currentChat.slice(0, index), currentDialog, ...currentChat.slice(index + 1)]
 
@@ -179,15 +182,33 @@ export const Chat = () => {
         }
 
         const index = dataCompanionChat.findIndex(elem => elem.chatId === currentUser)
-
-        if (index == -1) {
-          // Если у собеседника вообще нет личных чатов или есть чаты, но не с текущим пользователем, то добавляем ему новый чат и делаем запись в LocalStorage,
+        // Если у собеседника вообще нет личных чатов или есть чаты, но не с текущим пользователем, то добавляем ему новый чат и делаем запись в LocalStorage,
+        if (index == -1 && !editValue.value) {
           newChat = [...dataCompanionChat, newDialog]
           localStorage.setItem(storageCompanionChatName, JSON.stringify(newChat))
-        } else {
-          // иначе редактируем уже существующий чат
+          // иначе редактируем уже существующий чат.
+        } else if (!editValue.value) {
           const currentDialog = dataCompanionChat[index]
           currentDialog.dialog.push(newPost)
+          newChat = [...dataCompanionChat.slice(0, index), currentDialog, ...dataCompanionChat.slice(index + 1)]
+          localStorage.setItem(storageCompanionChatName, JSON.stringify(newChat))
+          // Редактируем запись у собеседника
+        } else {
+          const currentDialog = dataCompanionChat[index]
+          if(!currentDialog) return
+          let postIndex = null
+          // Ищем в диалогах себеседника редактируемую запись. Используем в выборке время создания записи.
+          const currentPost = currentDialog.dialog.filter((post, index) => {
+            let postTime = Date.parse(post.date).toString()
+            let editPostTime = Date.parse(editedPostDate).toString()
+            // Так как editPostTime не содержит миллисекунд, то для сравнения обрезаем последние 3 цифры
+            if (postTime.substr(0, postTime.length - 3) == editPostTime.substr(0, editPostTime.length - 3)) {
+              postIndex = index
+            }
+            return postTime.substr(0, postTime.length - 3) == editPostTime.substr(0, editPostTime.length - 3)
+          })
+          currentDialog.dialog[postIndex].text = post
+          currentDialog.dialog[postIndex].date = new Date()
           newChat = [...dataCompanionChat.slice(0, index), currentDialog, ...dataCompanionChat.slice(index + 1)]
           localStorage.setItem(storageCompanionChatName, JSON.stringify(newChat))
         }
