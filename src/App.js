@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const wideScreen = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) >= 960
+const getWideScreen = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) >= 960
 
 const isLocalStorage = storageAvailable('localStorage')
 const storageCurrentUserName = 'currentUser',
@@ -120,12 +120,32 @@ const App = () => {
   const routes = useRoutes(isAuth)
   const [chatType, setChatType] = useState(false) // chatType (true - личный, false - групповой)
   const [chatId, setChatId] = useState(findFirstGroupChat)
+  const [wideScreen, setWideScreen] = useState(getWideScreen)
   const [showChat, setShowChat] = useState(wideScreen)
   const [chatPersonal, setChatPersonal] = useState(dataPersonalChat)
   const [chatGroup, setChatGroup] = useState(dataGroupChat)
   const [users, setUsers] = useState(dataUsers)
   const [chats, setChats] = useState(dataChats)
   const [currentUser, setCurrentUser] = useState(dataCurrentUser)
+
+  // ComponentDidMont
+  useEffect(() => {
+    window.addEventListener('resize', resizeHandler)
+    return () => {
+      window.removeEventListener('resize', resizeHandler)
+    }
+  }, [])
+
+  // "Слушаем" изменение ширины экрана и меняем стейт wideScreen в зависимости от ширины
+  const resizeHandler = () => {
+    const windowWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)
+    setWideScreen(windowWidth >= 960 ? true : false)
+  }
+
+  // При переходе ширины экрана через заданную точку 960px показываем/скрываем чат
+  useEffect(() => {
+    setShowChat(wideScreen ? true : false)
+  }, [wideScreen])
 
   // При обновлении данных личного чата сохраняем их в LocaleStorage
   useEffect(() => {
