@@ -35,8 +35,8 @@ const useStyles = makeStyles(() => ({
   },
   textWrap: {
     position: 'relative',
-    width: '80%',
-    padding: '5px 20px 5px 5px',
+    width: '85%',
+    padding: '5px 50px 5px 5px',
     marginBottom: '5px',
     borderRadius: '5px',
     backgroundColor: 'rgba(0,0,0,0.1)'
@@ -195,7 +195,7 @@ export const Chat = () => {
           // Редактируем запись у собеседника
         } else {
           const currentDialog = dataCompanionChat[index]
-          if(!currentDialog) return
+          if (!currentDialog) return
           let postIndex = null
           // Ищем в диалогах себеседника редактируемую запись. Используем в выборке время создания записи.
           const currentPost = currentDialog.dialog.filter((post, index) => {

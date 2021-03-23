@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
+import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import logo from '../images/logo.svg'
 
@@ -54,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
     marginLeft: 'auto',
     color: '#FFFFFF',
-    cursor: 'pointer',
     [theme.breakpoints.down('sm')]: {
       display: 'block',
     },
@@ -87,50 +87,36 @@ export const Header = () => {
       <div className={menuClasses.join(' ')}>
         <NavLink
           to="/"
-          className={
-            curPath === '/'
-              ? [classes.active, classes.link].join(' ')
-              : classes.link
-          }
+          className={curPath === '/' ? [classes.active, classes.link].join(' ') : classes.link}
           onClick={hideMenu}
         >
           Чат
         </NavLink>
         <NavLink
           to="/profile"
-          className={
-            curPath === '/profile'
-              ? [classes.active, classes.link].join(' ')
-              : classes.link
-          }
+          className={curPath === '/profile' ? [classes.active, classes.link].join(' ') : classes.link}
           onClick={hideMenu}
         >
           Личный кабинет
         </NavLink>
         <NavLink
           to="/about"
-          className={
-            curPath === '/about'
-              ? [classes.active, classes.link].join(' ')
-              : classes.link
-          }
+          className={curPath === '/about' ? [classes.active, classes.link].join(' ') : classes.link}
           onClick={hideMenu}
         >
           О приложении
         </NavLink>
         <NavLink
           to="/auth"
-          className={
-            curPath === '/auth'
-              ? [classes.active, classes.link].join(' ')
-              : classes.link
-          }
+          className={curPath === '/auth' ? [classes.active, classes.link].join(' ') : classes.link}
           onClick={hideMenu}
         >
           Войти
         </NavLink>
       </div>
-      <MenuIcon className={classes.burger} onClick={toggleMenu} />
+      <IconButton aria-label="menu" className={classes.burger} onClick={toggleMenu}>
+        <MenuIcon />
+      </IconButton>
     </nav>
   )
 }

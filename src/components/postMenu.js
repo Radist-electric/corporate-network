@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import Fade from '@material-ui/core/Fade'
+import IconButton from '@material-ui/core/IconButton'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 
 const useStyles = makeStyles((theme) => ({
@@ -11,7 +12,6 @@ const useStyles = makeStyles((theme) => ({
     top: '50%',
     right: '0',
     transform: 'translateY(-50%)',
-    cursor: 'pointer',
     color: 'rgba(0,0,0,0.6)',
     transition: 'all 0.3s',
     '&:hover': {
@@ -49,7 +49,9 @@ export default function PostMenu(props) {
 
   return (
     <div className={classes.root}>
-      <MoreVertIcon aria-controls='fade-menu' aria-haspopup='true' onClick={handleClick} />
+      <IconButton aria-label="post-menu" aria-controls='fade-menu' aria-haspopup='true' onClick={handleClick}>
+        <MoreVertIcon />
+      </IconButton>
       <Menu
         className={classes.menu}
         id='fade-menu'
