@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import is from 'is_js'
 import TextField from '@material-ui/core/TextField'
 import IconButton from '@material-ui/core/IconButton'
 import SendIcon from '@material-ui/icons/Send'
@@ -30,6 +31,8 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
+const isMobile = is.mobile()
+
 export default function PostAddForm(props) {
   const classes = useStyles()
   const [value, setValue] = useState('')
@@ -52,10 +55,10 @@ export default function PostAddForm(props) {
   // Ловим нажатие клавиш
   const handleKey = (event) => {
     // Если Enter нажат вместе с Shift, то позволяем сделать перенос строки
-    if (event.key === 'Enter' && event.shiftKey) {
+    if (event.key === 'Enter' && event.shiftKey && !isMobile) {
       return
       // Если нажат только Enter, то создаём сообщение
-    } else if (event.key === 'Enter') {
+    } else if (event.key === 'Enter' && !isMobile) {
       onSubmit()
     }
   }
