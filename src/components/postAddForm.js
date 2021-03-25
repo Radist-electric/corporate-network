@@ -1,16 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
+import IconButton from '@material-ui/core/IconButton'
 import SendIcon from '@material-ui/icons/Send'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& .MuiTextField-root': {
-      margin: theme.spacing(1),
+      marginTop: '5px'
     },
     '& .MuiInputBase-multiline': {
       minHeight: '50px',
-      padding: '5px 50px 5px 5px',
+      padding: '5px 50px 5px 5px'
     },
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderColor: '#52535a'
@@ -24,17 +25,8 @@ const useStyles = makeStyles((theme) => ({
   },
   send: {
     position: 'absolute',
-    right: '5px',
-    border: 'none',
-    outline: 'none',
-    backgroundColor: 'transparent',
-    color: '#52535a',
-    cursor: 'pointer',
-    transition: 'all 300ms',
-    '&:hover': {
-      right: '2px',
-      color: 'rgba(0, 0, 0, .8)',
-    }
+    right: '0',
+    color: '#52535a'
   }
 }))
 
@@ -45,26 +37,38 @@ export default function PostAddForm(props) {
   const input = useRef(null)
 
   useEffect(() => {
-    if(props.editValue.value) {
+    if (props.editValue.value) {
       setValue(props.editValue.value)
       setPostId(props.editValue.postId)
       input.current.querySelector('textarea').focus()
     }
   }, [props.editValue])
 
+  // Сохраняем данные, введённые с поля ввода
   const handleChange = (event) => {
     setValue(event.target.value)
   }
 
-  const onSubmit = (e) => {
-    e.preventDefault()
-    if (value.length == 0) return
-    props.addPost(value, postId)
+  // Ловим нажатие клавиш
+  const handleKey = (event) => {
+    // Если Enter нажат вместе с Shift, то позволяем сделать перенос строки
+    if (event.key === 'Enter' && event.shiftKey) {
+      return
+      // Если нажат только Enter, то создаём сообщение
+    } else if (event.key === 'Enter') {
+      onSubmit()
+    }
+  }
+
+  // Подтверждение формы
+  const onSubmit = () => {
+    if (value.trim().length == 0) return
+    props.addPost(value.trim(), postId)
     setValue('')
   }
 
   return (
-    <form className={classes.root} noValidate autoComplete="off" onSubmit={onSubmit}>
+    <form className={classes.root} noValidate autoComplete="off">
       <div>
         <TextField
           id="outlined-multiline-flexible"
@@ -73,13 +77,15 @@ export default function PostAddForm(props) {
           rowsMax={2}
           value={value}
           onChange={handleChange}
+          onKeyUp={handleKey}
           variant="outlined"
           fullWidth={true}
-          className={classes.field}
           ref={input}
           InputProps={{
             endAdornment: (
-              <button className={classes.send}><SendIcon /></button>
+              <IconButton className={classes.send} onClick={onSubmit}>
+                <SendIcon />
+              </IconButton>
             ),
           }}
         />

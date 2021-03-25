@@ -47,7 +47,8 @@ const useStyles = makeStyles(() => ({
   },
   text: {
     margin: 0,
-    fontSize: '14px'
+    fontSize: '14px',
+    whiteSpace: 'pre-line'
   },
   date: {
     fontSize: '10px'
