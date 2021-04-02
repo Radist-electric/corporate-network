@@ -12,15 +12,14 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     height: '70px',
     [theme.breakpoints.down('sm')]: {
-      height: '40px',
+      height: '50px',
     },
   },
   logo: {
+    height: '100%',
     marginRight: '50px',
     '& img': {
-      [theme.breakpoints.down('sm')]: {
-        height: '40px',
-      },
+      height: '100%'
     },
   },
   link: {
@@ -44,8 +43,9 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       justifyContent: 'flex-end',
       padding: '10px',
-      backgroundColor: '#454545',
+      backgroundColor: '#464451',
       borderRadius: '5px',
+      boxShadow: '1px 1px 10px 0px rgba(255, 255, 255, 0.3)'
     },
   },
   drop: {

@@ -95,7 +95,7 @@ const Accordion = withStyles({
 
 const AccordionSummary = withStyles({
   root: {
-    backgroundColor: '#52535a',
+    backgroundColor: '#464451',
     color: '#FFFF33',
     borderRadius: '3px',
     marginBottom: -1,

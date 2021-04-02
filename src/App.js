@@ -5,7 +5,7 @@ import { Header } from './components/header'
 import { useRoutes } from './routes'
 import { AppContext } from './context/AppContext'
 import Paper from '@material-ui/core/Paper'
-import bg from './images/bg-1200.png'
+import bg from './images/bg.jpg'
 import { dataPersonalChatInit } from './data/dataPersonalChat'
 import { dataGroupChatInit } from './data/dataGroupChat'
 import { dataUsersInit } from './data/dataUsers'
@@ -24,8 +24,6 @@ const useStyles = makeStyles((theme) => ({
       padding: '20px',
       backgroundImage: `url(${bg})`,
       backgroundPosition: 'center center',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
       [theme.breakpoints.down('sm')]: {
         maxHeight: 'calc(100vh - 10px)',
         minHeight: '100vh',

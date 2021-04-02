@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
       marginTop: '20px',
       [theme.breakpoints.down('sm')]: {
         height: 'calc(100% - 10px)',
+        marginTop: '10px'
       },
     },
   },

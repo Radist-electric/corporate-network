@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
       overflowY: 'auto',
       [theme.breakpoints.down('sm')]: {
         height: 'calc(100% - 10px)',
+        marginTop: '10px'
       },
     },
   },
